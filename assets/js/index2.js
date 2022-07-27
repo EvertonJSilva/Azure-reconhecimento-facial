@@ -46,16 +46,13 @@
       }else{
         const canvas = $('#overlay').get(0)
         await canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height)
-       
       }
-
       setTimeout(() => onPlay())
     }
 
     async function run() {
-      
-        alert('vai iniciar')
-        // load face detection model
+      alert('vai iniciar')
+      // load face detection model
       await changeFaceDetector(TINY_FACE_DETECTOR)
       changeInputSize(512)
 
@@ -67,13 +64,10 @@
     }
 
     function updateResults() {}
-
-    $(document).ready(function() {
-
-      // renderNavBar('#navbar', 'webcam_face_detection')
-      initFaceDetectionControls()
-
-    }
+        $(document).ready(function() {
+        // renderNavBar('#navbar', 'webcam_face_detection')
+        initFaceDetectionControls()
+        }
     )
 
     Promise.all([
@@ -83,7 +77,6 @@
       faceapi.nets.faceRecognitionNet.loadFromUri('/assets/lib/face-api/models/'),
       faceapi.nets.faceExpressionNet.loadFromUri('/assets/lib/face-api/models/'),
       faceapi.nets.ageGenderNet.loadFromUri('/assets/lib/face-api/models/'),
-      
   ]).then((values) => {
     console.log('Componente iniciado');
     run();
@@ -92,19 +85,15 @@
   function TrocarTexto(texto) {
     var text = document.getElementById('textPosicao');
     text.innerHTML = texto ;
-  
   }
 
   function TrocarCores(sucesso) {
     var aviso = document.getElementById('RetanguloAvisoPosicao');
     if(sucesso){
       aviso.style.background =  "#4caf50";
-  
     }else{
       aviso.style.background = "#ff9800";
     }
-  
-
   }
 
   async function PosicionarRetangulo() {
@@ -112,9 +101,7 @@
     var video = document.getElementById('inputVideo');
     var text = document.getElementById('textPosicao');
     var aviso = document.getElementById('RetanguloAvisoPosicao');
-
     var rect = video.getBoundingClientRect();
-
     var obj = {
       width:  200,
       height: 270,
@@ -126,7 +113,6 @@
       leftMax: 0,
       topMin: 0,
       toptMax: 0,
-      
     };
 
     obj.leftMin = obj.left-obj.videoLeft-20;
@@ -134,15 +120,14 @@
     obj.topMin = obj.top-obj.videoTop+50;
     obj.topMax = obj.topMin+30;
 
-
     RetanguloPosicao.width= obj.width;
     RetanguloPosicao.height=obj.height;
     RetanguloPosicao.style.top = obj.top+"px";
     RetanguloPosicao.style.left= obj.left+"px";
-
+    
     text.style.top = rect.top-70+video.videoHeight+"px";
     text.style.left= obj.left+5+"px";
-
+      
     aviso.style.top = rect.top-70+video.videoHeight+"px";
     aviso.style.left= rect.left+"px";
     aviso.style.height = 70+"px";
@@ -156,8 +141,7 @@
     var w = parseInt(cs.getPropertyValue("width"), 10);
     var h = parseInt(cs.getPropertyValue("height"), 10);
     return {width: w, height: h}
-}
-
+ }
 
   async function capture(box) {
     var canvas = document.getElementById('captura');     
@@ -184,17 +168,13 @@
     newImg.height =  box._height;
  
     canvas.toBlob(function(blob) {
-
       url = URL.createObjectURL(blob);
       newImg.onload = function() {
-        // no longer need to read the blob so it's revoked
         URL.revokeObjectURL(url);
-
       };
 
       newImg.src = url;
       AzureDetect(blob);
-  
     });
   }
 
@@ -218,11 +198,9 @@
 
     limparFoto();
     pausarVideo();
-
 }
 
-  function AzureDetect(foto){
-
+function AzureDetect(foto){
   var url = URLAzure+URLRotaDetect
   var myHeaders = new Headers();
   myHeaders.append("Ocp-Apim-Subscription-Key", ChaveApi);
@@ -238,11 +216,9 @@
           .catch(err => {
             Erro('Não localizado!!! ');
           });
-
 }
 
- function AzureIdentify(idDetect){
-
+function AzureIdentify(idDetect){
   var url = URLAzure+URLRotaIdentify
   var myHeaders = new Headers();
   myHeaders.append("Ocp-Apim-Subscription-Key", ChaveApi);
@@ -257,16 +233,13 @@
             else throw Error(`Server returned ${response.status}: ${response.statusText}`)
           })
           .then(response => response.json())
-          .then(data => { EnviarTelaERP(data[0].candidates[0]) })                        
+          .then(data => { EnviarPostback(data[0].candidates[0]) })                        
           .catch(err => {
             Erro('Não localizado!!! ');
           });
-
 }
 
-
- function EnviarTelaERP(candidate){
-
+function EnviarPostback(candidate){
   var url = 'http://localhost:2001'
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW");
@@ -276,7 +249,6 @@
   json = json + candidate.personId
   json = json + '----WebKitFormBoundary7MA4YWxkTrZu0gW'
   
-
   fetch(url,
         {method:"POST", body:json, headers: myHeaders})
           .then(response => {
@@ -288,7 +260,6 @@
           .catch(err => {
             Successo(candidate)
           });
-
 }
 
 function limparFoto(){
@@ -301,7 +272,6 @@ function limparFoto(){
 function iniciarVideo(){
   const videoEl = $('#inputVideo').get(0);
   videoEl.play();
-
 }
 
 function pausarVideo(){
